@@ -1,39 +1,11 @@
-import type { Locale } from "./i18n";
-
-export type MetricId = "tti" | "bundle" | "locale" | "uptime";
-
-export type Metric = {
-  id: MetricId;
-  value: number;
-  unit: "seconds" | "kilobytes" | "percentage";
-};
-
-export const metrics: Metric[] = [
+export const metrics = [
   { id: "tti", value: 1.3, unit: "seconds" },
   { id: "bundle", value: 92, unit: "kilobytes" },
   { id: "locale", value: 96, unit: "percentage" },
   { id: "uptime", value: 0.17, unit: "percentage" },
 ];
 
-export type TaskItemId =
-  | "appShell"
-  | "vite"
-  | "progressiveEnhancement"
-  | "localeToggle"
-  | "pseudoLocalization"
-  | "glossary"
-  | "keyboard"
-  | "analytics"
-  | "translationStatus";
-
-export type TaskSection = {
-  id: "platform" | "i18n" | "ux";
-  titleKey: string;
-  descriptionKey: string;
-  items: { id: TaskItemId; labelKey: string; done: boolean }[];
-};
-
-export const taskSections: TaskSection[] = [
+export const taskSections = [
   {
     id: "platform",
     titleKey: "tasks.sections.platform.title",
@@ -41,7 +13,11 @@ export const taskSections: TaskSection[] = [
     items: [
       { id: "appShell", labelKey: "tasks.items.appShell", done: true },
       { id: "vite", labelKey: "tasks.items.vite", done: true },
-      { id: "progressiveEnhancement", labelKey: "tasks.items.progressiveEnhancement", done: true },
+      {
+        id: "progressiveEnhancement",
+        labelKey: "tasks.items.progressiveEnhancement",
+        done: true,
+      },
     ],
   },
   {
@@ -66,13 +42,7 @@ export const taskSections: TaskSection[] = [
   },
 ];
 
-export type FeatureCard = {
-  id: "modular" | "localization" | "accessibility";
-  titleKey: string;
-  bodyKey: string;
-};
-
-export const featureCards: FeatureCard[] = [
+export const featureCards = [
   {
     id: "modular",
     titleKey: "features.cards.modular.title",
@@ -90,7 +60,7 @@ export const featureCards: FeatureCard[] = [
   },
 ];
 
-export function formatMetricValue(metric: Metric, locale: Locale): string {
+export function formatMetricValue(metric, locale) {
   const numberFormat =
     metric.unit === "percentage"
       ? new Intl.NumberFormat(locale, { maximumFractionDigits: 2 })

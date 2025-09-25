@@ -1,28 +1,30 @@
 # HtmlSlim VanillaJS Experience
 
-This package delivers the VanillaJS migration prototype for HtmlSlim. It replaces the React/Next.js stack with an accessible, bilingual experience powered by Vite and modern browser APIs.
+This prototype demonstrates the Codex migration to a performance-first VanillaJS front end without bundlers or frameworks. It keeps the bilingual UX, HtmlSlim tooling, and observability guidance entirely in standards-based HTML, CSS, and ES modules.
 
 ## Highlights
 
-- ⚡️ **Performance-first shell** – semantic HTML, CSS variables, and zero-runtime rendering keep the bundle lean.
+- ⚡️ **Performance-first shell** – semantic HTML, CSS variables, and lightweight modules keep the bundle lean and fast to load.
 - 🌐 **English/Korean support** – deterministic locale detection with persistent language switching and localized metrics.
 - 🧰 **Enhanced HtmlSlim tool** – configurable attribute preservation, character savings summary, copy/download helpers, and accessible toasts.
-- ✅ **Migration tracker** – task lists tracking platform, localization, and UX milestones to avoid missed requirements.
+- ✅ **Migration tracker** – task lists covering platform, localization, and UX milestones so requirements stay visible.
 - 🔭 **Observability cues** – callouts for Web Vitals, analytics, and Sentry instrumentation.
 
-## Development
+## Running the prototype
+
+No build step is required. Serve the `apps/vanillajs` directory with any static file server or open `index.html` directly in a modern browser:
 
 ```bash
 cd apps/vanillajs
-pnpm install # or npm install
-pnpm dev     # or npm run dev
+python3 -m http.server 4173
 ```
 
-The build output is emitted with `pnpm build`. Static assets live in `dist/`.
+Then visit <http://localhost:4173>. Any static server (e.g., `npx http-server`, `deno task serve`) will work.
 
-## Testing Checklist
+## Testing checklist
 
-- Run `pnpm typecheck` to validate TypeScript types.
-- Execute `pnpm build` to ensure Vite bundles without errors.
+- Verify locale switching, keyboard navigation, and skip links without relying on build tooling.
+- Confirm the HtmlSlim tool copies/downloads output and reports reductions in both English and Korean.
+- Inspect metrics, tasks, feature cards, and observability content for accurate translations.
 
-The UI is optimized for keyboard navigation, high-contrast themes, and reduced motion preferences.
+The UI honors reduced motion, high contrast, and screen-reader announcements through semantic HTML and ARIA attributes.

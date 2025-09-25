@@ -1,103 +1,6 @@
-export type Locale = "en" | "ko";
+export const SUPPORTED_LOCALES = ["en", "ko"];
 
-type DeepRecordValue = string | { [key: string]: DeepRecordValue };
-
-type Translation = {
-  a11y: {
-    skip: string;
-    localeEn: string;
-    localeKo: string;
-    toastClose: string;
-    slimSuccess: string;
-    slimError: string;
-    localeChanged: string;
-  };
-  nav: {
-    product: string;
-    docs: string;
-    roadmap: string;
-    updates: string;
-  };
-  hero: {
-    tagline: string;
-    title: string;
-    subtitle: string;
-    ctaPrimary: string;
-    ctaSecondary: string;
-    quickStats: string;
-  };
-  metrics: {
-    tti: { label: string; caption: string };
-    bundle: { label: string; caption: string };
-    locale: { label: string; caption: string };
-    uptime: { label: string; caption: string };
-  };
-  slimmer: {
-    title: string;
-    description: string;
-    inputLabel: string;
-    outputLabel: string;
-    placeholder: string;
-    helper: string;
-    runButton: string;
-    copyButton: string;
-    downloadButton: string;
-    optionsTitle: string;
-    preserveIds: string;
-    preserveClasses: string;
-    preserveDataAttrs: string;
-    preserveWhitespace: string;
-    emptyError: string;
-    resultTitle: string;
-    removedLabel: string;
-    reductionLabel: string;
-    noChanges: string;
-    copiedToast: string;
-    downloadToast: string;
-    charCountSuffix: string;
-  };
-  tasks: {
-    title: string;
-    description: string;
-    sections: {
-      platform: { title: string; description: string };
-      i18n: { title: string; description: string };
-      ux: { title: string; description: string };
-    };
-    items: {
-      appShell: string;
-      vite: string;
-      progressiveEnhancement: string;
-      localeToggle: string;
-      pseudoLocalization: string;
-      glossary: string;
-      keyboard: string;
-      analytics: string;
-      translationStatus: string;
-    };
-  };
-  features: {
-    title: string;
-    description: string;
-    cards: {
-      modular: { title: string; body: string };
-      localization: { title: string; body: string };
-      accessibility: { title: string; body: string };
-    };
-  };
-  observability: {
-    title: string;
-    description: string;
-    bullets: [string, string, string];
-    cta: string;
-  };
-  footer: {
-    social: string;
-    rights: string;
-  };
-};
-
-export const translations: Record<Locale, Translation> = {
+export const translations = {
   en: {
     a11y: {
       skip: "Skip to main content",
@@ -148,8 +51,7 @@ export const translations: Record<Locale, Translation> = {
       inputLabel: "Input HTML",
       outputLabel: "Slimmed HTML",
       placeholder: "Paste HTML or snippets from your CMS…",
-      helper: "Tokens saved are calculated from raw character counts."
-        + " Preserve structural attributes when needed for selectors.",
+      helper: "Tokens saved are calculated from raw character counts. Preserve structural attributes when needed for selectors.",
       runButton: "Slim HTML",
       copyButton: "Copy result",
       downloadButton: "Download .html",
@@ -361,16 +263,16 @@ export const translations: Record<Locale, Translation> = {
   },
 };
 
-export function getTranslation(locale: Locale, key: string): string {
+export function getTranslation(locale, key) {
   const segments = key.split(".");
-  let current: DeepRecordValue = translations[locale] as unknown as DeepRecordValue;
+  let current = translations[locale];
 
   for (const segment of segments) {
     if (typeof current === "string") {
       throw new Error(`Translation key "${key}" resolved early at segment "${segment}".`);
     }
 
-    if (!(segment in current)) {
+    if (!Object.prototype.hasOwnProperty.call(current, segment)) {
       throw new Error(`Missing translation for key "${key}" in locale ${locale}`);
     }
 
@@ -384,6 +286,6 @@ export function getTranslation(locale: Locale, key: string): string {
   return current;
 }
 
-export function isLocale(value: string): value is Locale {
-  return value === "en" || value === "ko";
+export function isLocale(value) {
+  return SUPPORTED_LOCALES.includes(value);
 }

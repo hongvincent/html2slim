@@ -1,23 +1,7 @@
-export type SlimOptions = {
-  keepIds: boolean;
-  keepClasses: boolean;
-  keepDataAttrs: boolean;
-  collapseWhitespaceOnly: boolean;
-};
-
-export type SlimResult = {
-  html: string;
-  removedElements: Record<string, number>;
-  originalLength: number;
-  slimmedLength: number;
-  reductionPercent: number;
-  unchanged: boolean;
-};
-
 function createCounter() {
-  const removedElements: Record<string, number> = {};
+  const removedElements = {};
   return {
-    track(tag: string) {
+    track(tag) {
       removedElements[tag] = (removedElements[tag] || 0) + 1;
     },
     result() {
@@ -26,12 +10,12 @@ function createCounter() {
   };
 }
 
-export function slimHtml(input: string, options: SlimOptions): SlimResult {
+export function slimHtml(input, options) {
   const counter = createCounter();
   let html = input;
 
   if (!options.collapseWhitespaceOnly) {
-    html = html.replace(/<head\b[^>]*>[\s\S]*?<\/head>/gi, (match) => {
+    html = html.replace(/<head\b[^>]*>[\s\S]*?<\/head>/gi, () => {
       counter.track("head");
       return "";
     });

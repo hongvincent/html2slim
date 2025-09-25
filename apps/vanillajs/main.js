@@ -1,32 +1,15 @@
-import "./styles.css";
-import { getTranslation, isLocale, translations, type Locale } from "./i18n";
-import { featureCards, formatMetricValue, metrics, taskSections } from "./content";
-import { slimHtml, type SlimOptions } from "./slimHtml";
+import { getTranslation, isLocale, translations } from "./i18n.js";
+import { featureCards, formatMetricValue, metrics, taskSections } from "./content.js";
+import { slimHtml } from "./slimHtml.js";
 
-type SlimState = {
-  input: string;
-  result: string;
-  removedElements: Record<string, number>;
-  originalLength: number;
-  slimmedLength: number;
-  reductionPercent: number;
-  unchanged: boolean;
-};
-
-type AppState = {
-  locale: Locale;
-  slim: SlimState;
-  options: SlimOptions;
-};
-
-const DEFAULT_OPTIONS: SlimOptions = {
+const DEFAULT_OPTIONS = {
   keepIds: false,
   keepClasses: false,
   keepDataAttrs: false,
   collapseWhitespaceOnly: false,
 };
 
-const initialSlimState: SlimState = {
+const initialSlimState = {
   input: "",
   result: "",
   removedElements: {},
@@ -36,13 +19,13 @@ const initialSlimState: SlimState = {
   unchanged: true,
 };
 
-const state: AppState = {
+const state = {
   locale: detectLocale(),
-  slim: initialSlimState,
+  slim: { ...initialSlimState },
   options: { ...DEFAULT_OPTIONS },
 };
 
-function detectLocale(): Locale {
+function detectLocale() {
   const stored = typeof window !== "undefined" ? window.localStorage.getItem("htmlslim-locale") : null;
   if (stored && isLocale(stored)) {
     return stored;
@@ -58,25 +41,25 @@ function detectLocale(): Locale {
   return "en";
 }
 
-function persistLocale(locale: Locale) {
+function persistLocale(locale) {
   if (typeof window !== "undefined") {
     window.localStorage.setItem("htmlslim-locale", locale);
   }
 }
 
-function formatCharacterCount(value: number, locale: Locale): string {
+function formatCharacterCount(value, locale) {
   const formatter = new Intl.NumberFormat(locale);
   return `${formatter.format(value)} ${translations[locale].slimmer.charCountSuffix}`;
 }
 
-function formatReduction(original: number, slimmed: number, percent: number, locale: Locale): string {
+function formatReduction(original, slimmed, percent, locale) {
   const percentFormatter = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });
   const valueFormatter = new Intl.NumberFormat(locale);
   return `${percentFormatter.format(percent)}% (${valueFormatter.format(original)} → ${valueFormatter.format(slimmed)})`;
 }
 
 function renderLayout() {
-  const root = document.querySelector<HTMLDivElement>("#app");
+  const root = document.querySelector("#app");
   if (!root) {
     throw new Error("Missing #app container");
   }
@@ -261,10 +244,10 @@ function renderLayout() {
   `;
 }
 
-function applyTranslations(locale: Locale) {
+function applyTranslations(locale) {
   document.documentElement.lang = locale;
   document.title = `HtmlSlim · ${translations[locale].hero.title}`;
-  const elements = document.querySelectorAll<HTMLElement>("[data-i18n]");
+  const elements = document.querySelectorAll("[data-i18n]");
   elements.forEach((element) => {
     const key = element.dataset.i18n;
     if (!key) return;
@@ -277,7 +260,7 @@ function applyTranslations(locale: Locale) {
     }
   });
 
-  const localeButtons = document.querySelectorAll<HTMLButtonElement>(".locale-button");
+  const localeButtons = document.querySelectorAll(".locale-button");
   localeButtons.forEach((button) => {
     const targetLocale = button.dataset.locale;
     if (!targetLocale || !isLocale(targetLocale)) return;
@@ -289,7 +272,7 @@ function applyTranslations(locale: Locale) {
     button.setAttribute("aria-pressed", targetLocale === locale ? "true" : "false");
   });
 
-  const skipLink = document.querySelector<HTMLAnchorElement>(".skip-link");
+  const skipLink = document.querySelector(".skip-link");
   if (skipLink) {
     skipLink.textContent = translations[locale].a11y.skip;
   }
@@ -299,16 +282,16 @@ function applyTranslations(locale: Locale) {
   refreshSlimOutput();
 }
 
-function updateObservabilityList(locale: Locale) {
-  const list = document.querySelector<HTMLUListElement>("[data-observability-list]");
+function updateObservabilityList(locale) {
+  const list = document.querySelector("[data-observability-list]");
   if (!list) return;
   const items = translations[locale].observability.bullets;
   list.innerHTML = items.map((item) => `<li>${item}</li>`).join("");
 }
 
-function updateMetrics(locale: Locale) {
+function updateMetrics(locale) {
   metrics.forEach((metric) => {
-    const valueElement = document.querySelector<HTMLElement>(`[data-metric-value="${metric.id}"]`);
+    const valueElement = document.querySelector(`[data-metric-value="${metric.id}"]`);
     if (valueElement) {
       valueElement.textContent = formatMetricValue(metric, locale);
     }
@@ -316,13 +299,13 @@ function updateMetrics(locale: Locale) {
 }
 
 function attachListeners() {
-  const root = document.querySelector<HTMLDivElement>("#app");
+  const root = document.querySelector("#app");
   if (!root) return;
 
   root.addEventListener("click", (event) => {
-    const target = event.target as HTMLElement;
+    const target = event.target;
     if (target.closest(".locale-button")) {
-      const button = target.closest<HTMLButtonElement>(".locale-button");
+      const button = target.closest(".locale-button");
       if (!button) return;
       const locale = button.dataset.locale;
       if (locale && isLocale(locale) && locale !== state.locale) {
@@ -335,24 +318,26 @@ function attachListeners() {
     }
   });
 
-  const runButton = document.querySelector<HTMLButtonElement>("#run-slim");
+  const runButton = document.querySelector("#run-slim");
   runButton?.addEventListener("click", handleSlim);
 
-  const copyButton = document.querySelector<HTMLButtonElement>("#copy-result");
+  const copyButton = document.querySelector("#copy-result");
   copyButton?.addEventListener("click", handleCopy);
 
-  const downloadButton = document.querySelector<HTMLButtonElement>("#download-result");
+  const downloadButton = document.querySelector("#download-result");
   downloadButton?.addEventListener("click", handleDownload);
 
-  const input = document.querySelector<HTMLTextAreaElement>("#input-html");
+  const input = document.querySelector("#input-html");
   input?.addEventListener("input", (event) => {
-    const value = (event.target as HTMLTextAreaElement).value;
-    state.slim.input = value;
+    const target = event.target;
+    if (target instanceof HTMLTextAreaElement) {
+      state.slim.input = target.value;
+    }
   });
 
-  const optionInputs = document.querySelectorAll<HTMLInputElement>("[data-option]");
+  const optionInputs = document.querySelectorAll("[data-option]");
   optionInputs.forEach((checkbox) => {
-    const optionName = checkbox.dataset.option as keyof SlimOptions | undefined;
+    const optionName = checkbox.dataset.option;
     if (!optionName) return;
     checkbox.checked = Boolean(state.options[optionName]);
     checkbox.addEventListener("change", () => {
@@ -362,20 +347,20 @@ function attachListeners() {
 }
 
 function refreshSlimOutput() {
-  const output = document.querySelector<HTMLTextAreaElement>("#output-html");
-  const count = document.querySelector<HTMLElement>("#output-count");
-  const reduction = document.querySelector<HTMLElement>("#reduction-value");
-  const removedList = document.querySelector<HTMLUListElement>("#removed-summary");
+  const output = document.querySelector("#output-html");
+  const count = document.querySelector("#output-count");
+  const reduction = document.querySelector("#reduction-value");
+  const removedList = document.querySelector("#removed-summary");
 
   if (!state.slim.result) {
-    if (output) output.value = "";
+    if (output instanceof HTMLTextAreaElement) output.value = "";
     if (count) count.textContent = "";
     if (reduction) reduction.textContent = "";
     if (removedList) removedList.innerHTML = "";
     return;
   }
 
-  if (output) {
+  if (output instanceof HTMLTextAreaElement) {
     output.value = state.slim.result;
   }
 
@@ -409,8 +394,8 @@ function refreshSlimOutput() {
 }
 
 function handleSlim() {
-  const input = document.querySelector<HTMLTextAreaElement>("#input-html");
-  if (!input) return;
+  const input = document.querySelector("#input-html");
+  if (!(input instanceof HTMLTextAreaElement)) return;
   const value = input.value.trim();
 
   if (!value) {
@@ -461,8 +446,8 @@ function handleDownload() {
   showToast(translations[state.locale].slimmer.downloadToast, "success");
 }
 
-function showToast(message: string, variant: "success" | "error") {
-  const toastRoot = document.querySelector<HTMLDivElement>("#toast-root");
+function showToast(message, variant = "success") {
+  const toastRoot = document.querySelector("#toast-root");
   if (!toastRoot) return;
   const toast = document.createElement("div");
   toast.className = `toast ${variant}`;
@@ -483,14 +468,14 @@ function showToast(message: string, variant: "success" | "error") {
     );
   };
 
-  const closeButton = toast.querySelector<HTMLButtonElement>(".toast-close");
+  const closeButton = toast.querySelector(".toast-close");
   closeButton?.addEventListener("click", close);
 
   window.setTimeout(close, 4000);
 }
 
-function announce(message: string) {
-  const liveRegion = document.querySelector<HTMLDivElement>("#toast-root");
+function announce(message) {
+  const liveRegion = document.querySelector("#toast-root");
   if (!liveRegion) return;
   const region = document.createElement("div");
   region.className = "sr-only";
