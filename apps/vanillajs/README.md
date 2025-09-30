@@ -1,42 +1,56 @@
-# HtmlSlim Concept Gallery
+# HtmlSlim VanillaJS Studio
 
-A fantastical VanillaJS landing experience that showcases the Codex migration vision without implementing the migration tools themselves. The page celebrates the signature capabilities, bilingual storytelling, and performance-first ethos behind HtmlSlim.
+This package delivers the HtmlSlim experience as a framework-free, bilingual (English/Korean) web workspace. It demonstrates the migration goals documented in the PRD:
 
-## Experience Highlights
+- **Performance-first VanillaJS shell** with no runtime framework dependencies. All features are implemented using modern DOM APIs.
+- **Bilingual UX** using locale dictionaries and persistent preferences so teams can switch between English and Korean instantly.
+- **Core HtmlSlim functionality** – paste HTML, slim it with the production rules from the MCP service, inspect removed elements, and copy the results.
+- **Migration guardrails and workflow guidance** that surface the key KPIs, feature highlights, and checklists called out in the PRD.
 
-- **Aurora hero** – Gradient atmospherics, animated light orbs, and a stat panel summarising migration goals.
-- **Feature suite** – Three immersive cards detailing slimming artistry, experience design, and bilingual harmony with English/Korean copy.
-- **Journey timeline** – Gradient-wrapped path that illustrates the four beats from discovery to launch.
-- **Immersive spotlights** – Glassmorphism scenes for creative canvases, flow telemetry, and operational governance.
-- **Team voices** – Testimonials rendered in both locales to reinforce trust and momentum.
+## Getting started
 
-## Getting Started
-
-The gallery runs entirely on static assets:
+No build tooling is required. Serve the directory with any static file server or open `index.html` directly in your browser.
 
 ```bash
+# from the repository root
 cd apps/vanillajs
-python3 -m http.server 4173
+python -m http.server 4173
+# visit http://localhost:4173
 ```
 
-Open <http://localhost:4173> in a modern browser, or simply double-click `index.html`. No build toolchain is required.
+The app stores locale preferences in `localStorage` and gracefully falls back to English when a translation is missing.
 
-## Interaction Notes
+## Key files
 
-- Use the language pills in the sticky header to swap instantly between English and Korean.
-- Navigation links animate as you scroll thanks to IntersectionObserver-enhanced section tracking.
-- Reduced-motion preferences disable background animations for accessibility.
+| File | Purpose |
+| ---- | ------- |
+| `index.html` | Static entry point with a11y skip link and progressive enhancement fallback. |
+| `styles.css` | Aurora-inspired design system implemented with CSS variables and responsive layouts. |
+| `i18n.js` | Locale dictionaries, locale helpers, and metadata translations. |
+| `content.js` | Structured data for metrics, features, workflow steps, and FAQ items. |
+| `slim-html.js` | Framework-free implementation of the HtmlSlim slimming algorithm used by the MCP server. |
+| `main.js` | Application shell that renders sections, wires events, and powers the HTML slimmer. |
 
-## Project Structure
+## HtmlSlim rules
 
-```
-apps/vanillajs/
-├── content.js   # Structured data powering features, timelines, spotlights, and testimonials
-├── i18n.js      # English/Korean translations and helpers
-├── index.html   # Entry document loading the VanillaJS modules
-├── main.js      # Renders the layout, handles locale switching, smooth scroll, and nav highlights
-├── styles.css   # Aurora-inspired visual language with gradients, glass, and responsive layouts
-└── README.md    # You are here
-```
+The in-browser slimmer removes the same content as the MCP service:
 
-The concept intentionally omits the migration tooling to focus on visual storytelling. Treat it as an inspirational reference when planning the production-ready VanillaJS experience.
+- `<head>`, `<script>`, `<noscript>`, `<style>`, `<svg>`, `<meta>`, and `<link>` blocks.
+- HTML comments and extraneous whitespace.
+- `data-*`, `on*`, `id`, `class`, and `style` attributes.
+
+A summary card displays the original size, slimmed size, saved characters, and reduction percentage. The removal list surfaces how many of each element or attribute type was stripped.
+
+## Accessibility & UX
+
+- Every interactive control has a visible focus state and supports keyboard navigation.
+- Navigation links are tracked with an IntersectionObserver to highlight the active section.
+- Live-region friendly stats update as the slimming results change.
+- Locale buttons expose both language codes and readable language names (English/한국어).
+
+## Extending the demo
+
+- Update `i18n.js` to add new locales or surface additional PRD copy.
+- Adjust `slim-html.js` to tweak removal rules or add transformation steps (e.g., attribute allow-lists).
+- Use the workflow checklist as a foundation for deeper integration with project management tooling.
+

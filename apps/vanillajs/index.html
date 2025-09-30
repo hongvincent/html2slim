@@ -3,16 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>HtmlSlim Concept Gallery</title>
+    <title>HtmlSlim Studio</title>
     <meta
       name="description"
-      content="Immerse yourself in the HtmlSlim VanillaJS concept gallery – a bilingual, aurora-inspired showcase for Codex's migration vision."
+      content="HtmlSlim Studio is a VanillaJS workspace for slimming HTML markup with bilingual (English/Korean) UX, accessible controls, and instant insights."
     />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <a class="skip-link" href="#main" data-i18n="a11y.skip"></a>
+    <a class="skip-link" href="#main"></a>
     <div id="app"></div>
+    <noscript>
+      <div style="max-width: 720px; margin: 2rem auto; padding: 1.5rem; background: #0b0d1d; color: #e9ebff; border-radius: 1rem; border: 1px solid rgba(127, 135, 255, 0.3); font-family: 'Inter', sans-serif; line-height: 1.5;">
+        <h1 style="margin-top: 0;">HtmlSlim Studio requires JavaScript</h1>
+        <p>
+          Enable JavaScript to use the in-browser HTML slimmer. If you need an offline workflow, run the <code>apps/mcp</code>
+          service from this repository to access the same slimming engine through the MCP server.
+        </p>
+      </div>
+    </noscript>
     <script type="module" src="./main.js"></script>
   </body>
 </html>

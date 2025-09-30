@@ -1,141 +1,158 @@
-export const stats = [
-  { id: "tti", value: 1.2, type: "seconds" },
-  { id: "bundle", value: 78, type: "kilobytes" },
-  { id: "locales", value: 2, type: "count" },
-  { id: "satisfaction", value: 98, type: "percentage" },
+export const metrics = [
+  {
+    id: "tti",
+    icon: "⚡",
+    value: 1.3,
+    format: { style: "unit", unit: "second", maximumFractionDigits: 1 },
+    labelKey: "metrics.items.tti.title",
+    captionKey: "metrics.items.tti.caption",
+  },
+  {
+    id: "bundle",
+    icon: "🧊",
+    value: 120,
+    format: { style: "unit", unit: "kilobyte", maximumFractionDigits: 0 },
+    labelKey: "metrics.items.bundle.title",
+    captionKey: "metrics.items.bundle.caption",
+  },
+  {
+    id: "errors",
+    icon: "🛡️",
+    value: 0.002,
+    format: { style: "percent", maximumFractionDigits: 1 },
+    labelKey: "metrics.items.errors.title",
+    captionKey: "metrics.items.errors.caption",
+  },
 ];
 
-export function formatStatValue(stat, locale) {
-  const numberFormat = new Intl.NumberFormat(locale, {
-    maximumFractionDigits: stat.type === "seconds" ? 1 : 0,
-  });
+export function formatMetricValue(metric, locale) {
+  const { style, unit, maximumFractionDigits = 0 } = metric.format;
 
-  switch (stat.type) {
-    case "seconds":
-      return `${numberFormat.format(stat.value)}s`;
-    case "kilobytes":
-      return `${numberFormat.format(stat.value)} KB`;
-    case "count":
-      return numberFormat.format(stat.value);
-    case "percentage":
-    default:
-      return `${numberFormat.format(stat.value)}%`;
+  if (style === "percent") {
+    return new Intl.NumberFormat(locale, {
+      style: "percent",
+      maximumFractionDigits,
+    }).format(metric.value);
   }
+
+  if (style === "unit" && unit) {
+    return new Intl.NumberFormat(locale, {
+      style: "unit",
+      unit,
+      unitDisplay: "narrow",
+      maximumFractionDigits,
+    }).format(metric.value);
+  }
+
+  return new Intl.NumberFormat(locale, {
+    maximumFractionDigits,
+  }).format(metric.value);
 }
 
 export const featureCards = [
   {
-    id: "compression",
-    icon: "🌀",
-    titleKey: "features.compression.title",
-    bodyKey: "features.compression.body",
-    pointKeys: [
-      "features.compression.points.0",
-      "features.compression.points.1",
-      "features.compression.points.2",
+    id: "performance",
+    icon: "🚀",
+    titleKey: "features.cards.performance.title",
+    bodyKey: "features.cards.performance.body",
+    bullets: [
+      "features.cards.performance.points.0",
+      "features.cards.performance.points.1",
+      "features.cards.performance.points.2",
     ],
   },
   {
-    id: "experience",
-    icon: "🌈",
-    titleKey: "features.experience.title",
-    bodyKey: "features.experience.body",
-    pointKeys: [
-      "features.experience.points.0",
-      "features.experience.points.1",
-      "features.experience.points.2",
+    id: "localisation",
+    icon: "🌐",
+    titleKey: "features.cards.localization.title",
+    bodyKey: "features.cards.localization.body",
+    bullets: [
+      "features.cards.localization.points.0",
+      "features.cards.localization.points.1",
+      "features.cards.localization.points.2",
     ],
   },
   {
-    id: "localization",
-    icon: "🌏",
-    titleKey: "features.localization.title",
-    bodyKey: "features.localization.body",
-    pointKeys: [
-      "features.localization.points.0",
-      "features.localization.points.1",
-      "features.localization.points.2",
-    ],
-  },
-];
-
-export const journeySteps = [
-  {
-    id: "discover",
-    eyebrowKey: "journey.discover.eyebrow",
-    titleKey: "journey.discover.title",
-    descriptionKey: "journey.discover.body",
-  },
-  {
-    id: "compose",
-    eyebrowKey: "journey.compose.eyebrow",
-    titleKey: "journey.compose.title",
-    descriptionKey: "journey.compose.body",
-  },
-  {
-    id: "preview",
-    eyebrowKey: "journey.preview.eyebrow",
-    titleKey: "journey.preview.title",
-    descriptionKey: "journey.preview.body",
-  },
-  {
-    id: "shine",
-    eyebrowKey: "journey.shine.eyebrow",
-    titleKey: "journey.shine.title",
-    descriptionKey: "journey.shine.body",
-  },
-];
-
-export const spotlights = [
-  {
-    id: "canvas",
-    tone: "violet",
-    eyebrowKey: "spotlights.canvas.eyebrow",
-    titleKey: "spotlights.canvas.title",
-    descriptionKey: "spotlights.canvas.body",
-    highlightKeys: [
-      "spotlights.canvas.highlights.0",
-      "spotlights.canvas.highlights.1",
-      "spotlights.canvas.highlights.2",
-    ],
-  },
-  {
-    id: "flow",
-    tone: "emerald",
-    eyebrowKey: "spotlights.flow.eyebrow",
-    titleKey: "spotlights.flow.title",
-    descriptionKey: "spotlights.flow.body",
-    highlightKeys: [
-      "spotlights.flow.highlights.0",
-      "spotlights.flow.highlights.1",
-      "spotlights.flow.highlights.2",
-    ],
-  },
-  {
-    id: "ops",
-    tone: "amber",
-    eyebrowKey: "spotlights.ops.eyebrow",
-    titleKey: "spotlights.ops.title",
-    descriptionKey: "spotlights.ops.body",
-    highlightKeys: [
-      "spotlights.ops.highlights.0",
-      "spotlights.ops.highlights.1",
-      "spotlights.ops.highlights.2",
+    id: "workflow",
+    icon: "🧭",
+    titleKey: "features.cards.workflow.title",
+    bodyKey: "features.cards.workflow.body",
+    bullets: [
+      "features.cards.workflow.points.0",
+      "features.cards.workflow.points.1",
+      "features.cards.workflow.points.2",
     ],
   },
 ];
 
-export const testimonials = [
+export const workflowSteps = [
   {
-    id: "hana",
-    quoteKey: "testimonials.hana.quote",
-    roleKey: "testimonials.hana.role",
-    nameKey: "testimonials.hana.name",
+    id: "detect",
+    icon: "🔍",
+    badgeKey: "workflow.steps.detect.badge",
+    titleKey: "workflow.steps.detect.title",
+    bodyKey: "workflow.steps.detect.body",
   },
   {
-    id: "marco",
-    quoteKey: "testimonials.marco.quote",
-    roleKey: "testimonials.marco.role",
-    nameKey: "testimonials.marco.name",
+    id: "instrument",
+    icon: "📡",
+    badgeKey: "workflow.steps.instrument.badge",
+    titleKey: "workflow.steps.instrument.title",
+    bodyKey: "workflow.steps.instrument.body",
+  },
+  {
+    id: "localize",
+    icon: "🈺",
+    badgeKey: "workflow.steps.localize.badge",
+    titleKey: "workflow.steps.localize.title",
+    bodyKey: "workflow.steps.localize.body",
+  },
+  {
+    id: "harden",
+    icon: "🛠️",
+    badgeKey: "workflow.steps.harden.badge",
+    titleKey: "workflow.steps.harden.title",
+    bodyKey: "workflow.steps.harden.body",
+  },
+];
+
+export const checklistTasks = [
+  {
+    id: "app-shell",
+    labelKey: "workflow.checklist.items.appShell",
+  },
+  {
+    id: "search",
+    labelKey: "workflow.checklist.items.search",
+  },
+  {
+    id: "editor",
+    labelKey: "workflow.checklist.items.editor",
+  },
+  {
+    id: "analytics",
+    labelKey: "workflow.checklist.items.analytics",
+  },
+  {
+    id: "fallbacks",
+    labelKey: "workflow.checklist.items.fallbacks",
+  },
+];
+
+export const faqItems = [
+  {
+    id: "works",
+    questionKey: "faq.items.0.question",
+    answerKey: "faq.items.0.answer",
+  },
+  {
+    id: "difference",
+    questionKey: "faq.items.1.question",
+    answerKey: "faq.items.1.answer",
+  },
+  {
+    id: "trust",
+    questionKey: "faq.items.2.question",
+    answerKey: "faq.items.2.answer",
   },
 ];
